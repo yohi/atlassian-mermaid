@@ -11,27 +11,42 @@
 .mermaid-rendered-block svg {
   max-width: 100%;
   height: auto;
+  display: block;
+  margin: 0 auto;
 }
 
-.mermaid-toggle-btn {
+.mermaid-action-bar {
+  display: flex;
+  gap: 6px;
   position: absolute;
   top: 6px;
   right: 6px;
+  z-index: 1;
+}
+
+.mermaid-theme-btn,
+.mermaid-toggle-btn {
   background: #f4f5f7;
   border: 1px solid #dfe1e6;
   border-radius: 4px;
-  padding: 2px 8px;
+  padding: 4px 10px;
   font-size: 11px;
-  font-family: monospace;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
   color: #5e6c84;
   cursor: pointer;
-  z-index: 1;
-  transition: background 0.15s ease;
+  transition: background 0.15s ease, color 0.15s ease, border-color 0.15s ease;
 }
 
+.mermaid-theme-btn:hover,
 .mermaid-toggle-btn:hover {
   background: #ebecf0;
   color: #253858;
+  border-color: #c1c7d0;
+}
+
+.mermaid-theme-btn:active,
+.mermaid-toggle-btn:active {
+  background: #deebff;
 }
 
 .mermaid-source-block {
@@ -47,19 +62,47 @@
   line-height: 1.5;
   white-space: pre;
   font-family: 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, monospace;
+  color: #253858;
 }
 
 .mermaid-error-badge {
-  background: #fffae6;
+  background: #fff0b3;
   border: 1px solid #ffe380;
-  border-radius: 4px;
-  padding: 4px 10px;
+  border-radius: 6px;
+  padding: 10px 14px;
+  margin: 8px 0;
   font-size: 12px;
-  color: #8b6e00;
-  margin-bottom: 4px;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  color: #172b4d;
 }
 
-/* Loader */
+.mermaid-error-badge[data-error="true"] {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.mermaid-error-icon {
+  font-size: 14px;
+}
+
+.mermaid-error-title {
+  font-weight: 600;
+  color: #8b6e00;
+}
+
+.mermaid-error-message {
+  color: #5e6c84;
+  word-break: break-word;
+  white-space: pre-wrap;
+  font-family: monospace;
+  font-size: 11px;
+  background: rgba(0, 0, 0, 0.04);
+  padding: 6px 8px;
+  border-radius: 3px;
+  margin-top: 4px;
+}
+
 .mermaid-loader {
   display: flex;
   align-items: center;
@@ -74,6 +117,10 @@
   font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
 }
 
+.mermaid-loader-text {
+  color: #5e6c84;
+}
+
 .mermaid-loader-spinner {
   width: 18px;
   height: 18px;
@@ -86,4 +133,112 @@
 
 @keyframes mermaid-spin {
   to { transform: rotate(360deg); }
+}
+
+@media (prefers-color-scheme: dark) {
+  .mermaid-rendered-block {
+    background: #1e1e1e;
+    border-color: #3d3d3d;
+  }
+
+  .mermaid-action-bar {
+    background: rgba(30, 30, 30, 0.9);
+    border-radius: 4px;
+    padding: 2px;
+  }
+
+  .mermaid-theme-btn,
+  .mermaid-toggle-btn {
+    background: #2d2d2d;
+    border-color: #404040;
+    color: #a0a0a0;
+  }
+
+  .mermaid-theme-btn:hover,
+  .mermaid-toggle-btn:hover {
+    background: #3d3d3d;
+    color: #e0e0e0;
+    border-color: #505050;
+  }
+
+  .mermaid-source-block {
+    background: #252526;
+    border-color: #3d3d3d;
+  }
+
+  .mermaid-source-block code {
+    color: #d4d4d4;
+  }
+
+  .mermaid-loader {
+    background: #1e1e1e;
+    border-color: #3d3d3d;
+    color: #a0a0a0;
+  }
+
+  .mermaid-loader-spinner {
+    border-color: #404040;
+    border-top-color: #4da6ff;
+  }
+
+  .mermaid-error-badge {
+    background: #5c3d00;
+    border-color: #8b6914;
+    color: #ffd966;
+  }
+
+  .mermaid-error-title {
+    color: #ffd966;
+  }
+
+  .mermaid-error-message {
+    color: #b0b0b0;
+    background: rgba(0, 0, 0, 0.3);
+  }
+}
+
+[data-theme="dark"] .mermaid-rendered-block,
+.dark .mermaid-rendered-block,
+[class*="dark"] .mermaid-rendered-block {
+  background: #1e1e1e;
+  border-color: #3d3d3d;
+}
+
+[data-theme="dark"] .mermaid-action-bar,
+.dark .mermaid-action-bar,
+[class*="dark"] .mermaid-action-bar {
+  background: rgba(30, 30, 30, 0.9);
+}
+
+[data-theme="dark"] .mermaid-theme-btn,
+[data-theme="dark"] .mermaid-toggle-btn,
+.dark .mermaid-theme-btn,
+.dark .mermaid-toggle-btn,
+[class*="dark"] .mermaid-theme-btn,
+[class*="dark"] .mermaid-toggle-btn {
+  background: #2d2d2d;
+  border-color: #404040;
+  color: #a0a0a0;
+}
+
+[data-theme="dark"] .mermaid-source-block,
+.dark .mermaid-source-block,
+[class*="dark"] .mermaid-source-block {
+  background: #252526;
+}
+
+[data-theme="dark"] .mermaid-loader,
+.dark .mermaid-loader,
+[class*="dark"] .mermaid-loader {
+  background: #1e1e1e;
+  border-color: #3d3d3d;
+  color: #a0a0a0;
+}
+
+[data-theme="dark"] .mermaid-error-badge,
+.dark .mermaid-error-badge,
+[class*="dark"] .mermaid-error-badge {
+  background: #5c3d00;
+  border-color: #8b6914;
+  color: #ffd966;
 }
