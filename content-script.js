@@ -27,7 +27,10 @@
 
   function isMermaidContent(text) {
     if (!text) return false;
-    const trimmed = text.trim();
+    // Normalize and remove backticks if any
+    const trimmed = text.trim().replace(/^[`~]{3}\s*(mermaid)?\n?/, '');
+    if (!trimmed) return false;
+
     return MERMAID_KEYWORDS.some((kw) => trimmed.startsWith(kw));
   }
 
@@ -76,7 +79,12 @@
         const rawSource = isBitbucket() ? extractFromBitbucket(block) : extractFromConfluence(block);
         const source = getCleanSource(rawSource);
 
-        if (source && (block.classList.contains('language-mermaid') || isMermaidContent(source))) {
+        // More strict check: must have language-mermaid class OR start with mermaid keywords
+        const isMermaid = block.classList.contains('language-mermaid') || 
+                         block.querySelector('.language-mermaid') !== null ||
+                         isMermaidContent(source);
+
+        if (source && isMermaid) {
           processedBlocks.add(block);
           showLoader(block);
         }
