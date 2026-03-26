@@ -1,0 +1,13 @@
+# Chrome Extension Temporary Files
+*.crx
+*.pem
+.DS_Store
+
+# IDE / Editor Files
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Project specific
+!vendor/mermaid.min.js

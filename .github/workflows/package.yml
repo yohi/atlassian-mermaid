@@ -1,0 +1,35 @@
+name: Package Extension
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - '**.js'
+      - '**.css'
+      - '**.json'
+      - 'icons/**'
+      - 'vendor/**'
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Create ZIP package
+        run: |
+          zip -r mermaid-atlassian-extension.zip . \
+            -x "*.git*" \
+            -x ".github*" \
+            -x "README.md" \
+            -x ".gitignore" \
+            -x "reverse-engineering*"
+
+      - name: Upload Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: mermaid-atlassian-extension
+          path: mermaid-atlassian-extension.zip
