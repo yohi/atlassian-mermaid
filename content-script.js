@@ -109,9 +109,39 @@
 
   function isMermaidContent(text) {
     if (!text) return false;
-    const trimmed = text.trim().replace(/^[`~]{3}\s*(mermaid)?\n?/, '');
-    if (!trimmed) return false;
-    return CONFIG.MERMAID_KEYWORDS.some((kw) => trimmed.startsWith(kw));
+    
+    // Remove triple backticks and mermaid prefix
+    let content = text.trim().replace(/^[`~]{3}\s*(mermaid)?\n?/, '');
+    
+    // Remove YAML frontmatter (--- ... ---)
+    if (content.startsWith('---')) {
+      const endOfFrontmatter = content.indexOf('---', 3);
+      if (endOfFrontmatter !== -1) {
+        content = content.substring(endOfFrontmatter + 3).trim();
+      }
+    }
+
+    // Remove comments (%% ...) and empty lines to find the actual start
+    content = content.replace(/^%%.*(\n|$)/gm, '').trim();
+    
+    if (!content) return false;
+
+    // Strict keyword matching: must be followed by space, newline, or end of string
+    return CONFIG.MERMAID_KEYWORDS.some((kw) => {
+      const kwTrimmed = kw.trim();
+      if (content === kwTrimmed) return true;
+      const nextChar = content.charAt(kwTrimmed.length);
+      return content.startsWith(kwTrimmed) && (nextChar === ' ' || nextChar === '\n' || nextChar === '\r' || nextChar === '\t');
+    });
+  }
+
+  function isMermaidBlock(block, source) {
+    if (!source) return false;
+    return (
+      block.classList.contains('language-mermaid') || 
+      block.querySelector('.language-mermaid') !== null ||
+      isMermaidContent(source)
+    );
   }
 
   function showLoader(wrapper) {
@@ -379,12 +409,7 @@
         const rawSource = siteConfig.extractBlock(block);
         const source = getCleanSource(rawSource);
 
-        const isMermaid = 
-          block.classList.contains('language-mermaid') || 
-          block.querySelector('.language-mermaid') !== null ||
-          isMermaidContent(source);
-
-        if (source && isMermaid) {
+        if (isMermaidBlock(block, source)) {
           processedBlocks.add(block);
           showLoader(block);
         }
@@ -405,7 +430,7 @@
         const rawSource = siteConfig.extractBlock(block);
         const source = getCleanSource(rawSource);
 
-        if (source && isMermaidContent(source)) {
+        if (isMermaidBlock(block, source)) {
           blocks.push({ wrapper: block, source });
         }
       }
