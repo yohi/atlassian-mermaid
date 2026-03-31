@@ -4,7 +4,6 @@ on:
   push:
     branches:
       - master
-      - fix/release-workflow
     paths:
       - '**.js'
       - '**.css'
@@ -44,10 +43,9 @@ jobs:
 
       - name: Release
         uses: softprops/action-gh-release@v2
-        if: github.event_name == 'push' && (github.ref == 'refs/heads/master' || github.ref == 'refs/heads/fix/release-workflow')
+        if: github.event_name == 'push' && github.ref == 'refs/heads/master'
         with:
-          tag_name: v${{ steps.get_version.outputs.VERSION }}-test
-          name: Release v${{ steps.get_version.outputs.VERSION }} (Test)
+          tag_name: v${{ steps.get_version.outputs.VERSION }}
+          name: Release v${{ steps.get_version.outputs.VERSION }}
           files: mermaid-atlassian-extension.zip
           generate_release_notes: true
-          prerelease: true
