@@ -3,7 +3,7 @@ name: Package Extension
 on:
   push:
     branches:
-      - main
+      - master
     paths:
       - '**.js'
       - '**.css'
@@ -15,9 +15,15 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
+    permissions:
+      contents: write
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
+
+      - name: Get version
+        id: get_version
+        run: echo "VERSION=$(jq -r .version manifest.json)" >> $GITHUB_OUTPUT
 
       - name: Create ZIP package
         run: |
@@ -33,3 +39,12 @@ jobs:
         with:
           name: mermaid-atlassian-extension
           path: mermaid-atlassian-extension.zip
+
+      - name: Release
+        uses: softprops/action-gh-release@v2
+        if: github.event_name == 'push' && github.ref == 'refs/heads/master'
+        with:
+          tag_name: v${{ steps.get_version.outputs.VERSION }}
+          name: Release v${{ steps.get_version.outputs.VERSION }}
+          files: mermaid-atlassian-extension.zip
+          generate_release_notes: true
