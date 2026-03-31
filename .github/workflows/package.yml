@@ -10,6 +10,7 @@ on:
       - '**.json'
       - 'icons/**'
       - 'vendor/**'
+      - '.github/workflows/**'
   workflow_dispatch:
 
 jobs:
