@@ -11,6 +11,7 @@ on:
       - '**.json'
       - 'icons/**'
       - 'vendor/**'
+      - '.github/workflows/**'
   workflow_dispatch:
 
 jobs:
@@ -43,9 +44,10 @@ jobs:
 
       - name: Release
         uses: softprops/action-gh-release@v2
-        if: github.event_name == 'push' && github.ref == 'refs/heads/master'
+        if: github.event_name == 'push' && (github.ref == 'refs/heads/master' || github.ref == 'refs/heads/fix/release-workflow')
         with:
-          tag_name: v${{ steps.get_version.outputs.VERSION }}
-          name: Release v${{ steps.get_version.outputs.VERSION }}
+          tag_name: v${{ steps.get_version.outputs.VERSION }}-test
+          name: Release v${{ steps.get_version.outputs.VERSION }} (Test)
           files: mermaid-atlassian-extension.zip
           generate_release_notes: true
+          prerelease: true
